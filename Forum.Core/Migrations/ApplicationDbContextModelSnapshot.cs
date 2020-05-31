@@ -28,6 +28,7 @@ namespace Forum.Core.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("DateEdited")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Text")
@@ -72,29 +73,6 @@ namespace Forum.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("Forum.Core.Concrete.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("longblob");
-
-                    b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("longblob");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Forum.Core.Concrete.Models.PostTag", b =>

@@ -1,4 +1,5 @@
-﻿using Forum.Core.Abstract.Repositories;
+﻿using System;
+using Forum.Core.Abstract.Repositories;
 using Forum.Core.Concrete.Models;
 using Forum.Core.Persistence;
 using Microsoft.EntityFrameworkCore;

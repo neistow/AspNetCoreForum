@@ -25,12 +25,12 @@ namespace Forum.Core.Concrete.Managers
             return _postRepository.GetPostWithTags(id);
         }
 
-        public void Create(Post post)
+        public void AddPost(Post post)
         {
             _postRepository.Add(post);
         }
 
-        public void DeletePost(Post post)
+        public void RemovePost(Post post)
         {
             _postRepository.Remove(post);
         }

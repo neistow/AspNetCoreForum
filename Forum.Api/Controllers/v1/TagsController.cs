@@ -50,7 +50,7 @@ namespace Forum.Api.Controllers.v1
         {
             var tag = _mapper.Map<Tag>(tagRequest);
 
-            _tagManager.CreateTag(tag);
+            _tagManager.AddTag(tag);
             await _tagManager.SaveChangesAsync();
 
             var response = _mapper.Map<TagResponse>(tag);

@@ -51,7 +51,7 @@ namespace Forum.Api.Controllers.v1
         {
             var post = _mapper.Map<Post>(postRequest);
 
-            _postManager.Create(post);
+            _postManager.AddPost(post);
             await _postManager.SaveChangesAsync();
 
             var response = _mapper.Map<PostResponse>(post);
@@ -85,7 +85,7 @@ namespace Forum.Api.Controllers.v1
                 return NotFound();
             }
 
-            _postManager.DeletePost(post);
+            _postManager.RemovePost(post);
             await _postManager.SaveChangesAsync();
 
             return Ok();
