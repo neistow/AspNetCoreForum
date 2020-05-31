@@ -5,10 +5,12 @@ using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Api.Controllers.v1
 {
+    [Authorize]
     [ApiController]
     [Route("/api/v1/[controller]")]
     public class TagsController : ControllerBase
@@ -21,7 +23,8 @@ namespace Forum.Api.Controllers.v1
             _tagManager = tagManager;
             _mapper = mapper;
         }
-
+        
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetTags()
         {
@@ -31,6 +34,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTag([FromRoute] int id)
         {

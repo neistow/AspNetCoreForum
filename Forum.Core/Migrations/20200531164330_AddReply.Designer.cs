@@ -3,14 +3,16 @@ using System;
 using Forum.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Forum.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200531164330_AddReply")]
+    partial class AddReply
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,7 +75,6 @@ namespace Forum.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AuthorId")
-                        .IsRequired()
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("DateCreated")
@@ -337,8 +338,7 @@ namespace Forum.Core.Migrations
                     b.HasOne("Forum.Core.Concrete.Models.User", "Author")
                         .WithMany("Replies")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Forum.Core.Concrete.Models.Post", "Post")
                         .WithMany("Replies")

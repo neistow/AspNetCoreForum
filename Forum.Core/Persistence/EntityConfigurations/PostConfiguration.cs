@@ -6,13 +6,19 @@ namespace Forum.Core.Persistence.EntityConfigurations
 {
     public class PostConfiguration : IEntityTypeConfiguration<Post>
     {
-        public void Configure(EntityTypeBuilder<Post> builder)
+        public void Configure(EntityTypeBuilder<Post> entity)
         {
-            builder.HasKey(post => post.Id);
+            entity.HasKey(post => post.Id);
 
-            builder.Property(post => post.Title).HasMaxLength(55).IsRequired();
-            builder.Property(post => post.Text).HasMaxLength(5000).IsRequired();
-            builder.Property(post => post.DateCreated).ValueGeneratedOnAdd();
+            entity.HasOne(p => p.Author)
+                .WithMany(u => u.Posts)
+                .HasForeignKey(p => p.AuthorId).OnDelete(DeleteBehavior.NoAction);
+
+            entity.Property(p => p.AuthorId).IsRequired();
+            
+            entity.Property(post => post.Title).HasMaxLength(55).IsRequired();
+            entity.Property(post => post.Text).HasMaxLength(5000).IsRequired();
+            entity.Property(post => post.DateCreated).ValueGeneratedOnAdd();
         }
     }
 }

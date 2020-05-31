@@ -1,7 +1,8 @@
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using AutoMapper;
-using FluentValidation;
 using FluentValidation.AspNetCore;
-using Forum.Api.Requests;
 using Forum.Api.Validator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +16,9 @@ using Forum.Core.Concrete.Managers;
 using Forum.Core.Concrete.Models;
 using Forum.Core.Concrete.Repositories;
 using Forum.Core.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace Forum.Api
@@ -56,10 +60,37 @@ namespace Forum.Api
                     fv.RegisterValidatorsFromAssemblyContaining<TagRequestValidator>();
                 });
 
+            // Identity
 
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+            
             // Add Mapper and Mapper Configs
             services.AddAutoMapper(typeof(Startup).Assembly);
 
+            // jwt
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["Jwt:JwtIssuer"],
+                        ValidAudience = Configuration["Jwt:JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:JwtKey"])),
+                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                    };
+                });
 
             // Bind Repositories and Managers Here...
             services.AddScoped<DbContext, ApplicationDbContext>();
@@ -79,6 +110,9 @@ namespace Forum.Api
             app.UseStatusCodePages();
             app.UseHttpsRedirection();
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

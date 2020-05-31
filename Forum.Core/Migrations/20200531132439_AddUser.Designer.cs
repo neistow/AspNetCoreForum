@@ -3,14 +3,16 @@ using System;
 using Forum.Core.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Forum.Core.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200531132439_AddUser")]
+    partial class AddUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,10 +24,6 @@ namespace Forum.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAdd()
@@ -46,8 +44,6 @@ namespace Forum.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
                     b.ToTable("Posts");
                 });
 
@@ -66,40 +62,6 @@ namespace Forum.Core.Migrations
                     b.ToTable("PostTags");
                 });
 
-            modelBuilder.Entity("Forum.Core.Concrete.Models.Reply", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("DateCreated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("DateEdited")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("varchar(1000) CHARACTER SET utf8mb4")
-                        .HasMaxLength(1000);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Replies");
-                });
-
             modelBuilder.Entity("Forum.Core.Concrete.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -107,9 +69,7 @@ namespace Forum.Core.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(55) CHARACTER SET utf8mb4")
-                        .HasMaxLength(55);
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -308,15 +268,6 @@ namespace Forum.Core.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Forum.Core.Concrete.Models.Post", b =>
-                {
-                    b.HasOne("Forum.Core.Concrete.Models.User", "Author")
-                        .WithMany("Posts")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Forum.Core.Concrete.Models.PostTag", b =>
                 {
                     b.HasOne("Forum.Core.Concrete.Models.Post", "Post")
@@ -329,21 +280,6 @@ namespace Forum.Core.Migrations
                         .WithMany("PostTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Forum.Core.Concrete.Models.Reply", b =>
-                {
-                    b.HasOne("Forum.Core.Concrete.Models.User", "Author")
-                        .WithMany("Replies")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Forum.Core.Concrete.Models.Post", "Post")
-                        .WithMany("Replies")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

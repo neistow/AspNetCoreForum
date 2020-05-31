@@ -6,9 +6,9 @@ namespace Forum.Core.Persistence.EntityConfigurations
 {
     public class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
-        public void Configure(EntityTypeBuilder<Tag> builder)
+        public void Configure(EntityTypeBuilder<Tag> entity)
         {
-            builder.Property(tag => tag.Name).HasMaxLength(55).IsRequired();
+            entity.Property(tag => tag.Name).HasMaxLength(55).IsRequired();
         }
     }
 }

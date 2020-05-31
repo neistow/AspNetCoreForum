@@ -7,9 +7,11 @@ using Forum.Api.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Forum.Api.Controllers.v1
 {
+    [Authorize]
     [ApiController]
     [Route("/api/v1/[controller]")]
     public class PostsController : ControllerBase
@@ -23,6 +25,7 @@ namespace Forum.Api.Controllers.v1
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetPosts()
         {
@@ -32,6 +35,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPost([FromRoute] int id)
         {

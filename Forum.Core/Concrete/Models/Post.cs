@@ -12,11 +12,15 @@ namespace Forum.Core.Concrete.Models
         public DateTime DateCreated { get; set; }
         public DateTime? DateEdited { get; set; }
 
+        public User Author { get; set; }
+        public string AuthorId { get; set; }
         public ICollection<PostTag> PostTags { get; set; }
+        public ICollection<Reply> Replies { get; set; }
 
         public Post()
         {
             PostTags = new Collection<PostTag>();
+            Replies = new Collection<Reply>();
         }
     }
 }
