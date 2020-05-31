@@ -9,7 +9,7 @@ using Forum.Core.Concrete.Models;
 
 namespace Forum.Core.Concrete.Managers
 {
-    public class UserManager : IUserManager, IManager
+    public class UserManager : IUserManager
     {
         private readonly IUserRepository _repository;
 
@@ -45,7 +45,7 @@ namespace Forum.Core.Concrete.Managers
             return _repository.Get(id);
         }
 
-        public bool Create(User user, string password)
+        public bool CreateUser(User user, string password)
         {
             if (_repository.HasUniqueEmailAndUsername(user))
             {

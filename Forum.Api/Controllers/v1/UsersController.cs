@@ -67,7 +67,7 @@ namespace Forum.Api.Controllers.v1
         {
             var user = _mapper.Map<User>(request);
 
-            var result = _userManager.Create(user, request.Password);
+            var result = _userManager.CreateUser(user, request.Password);
             if (!result)
             {
                 return BadRequest("Email or Username is already in use!");
