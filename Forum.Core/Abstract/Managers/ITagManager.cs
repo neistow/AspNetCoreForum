@@ -8,7 +8,7 @@ namespace Forum.Core.Abstract.Managers
     {
         Task<List<Tag>> GetAllTags();
         ValueTask<Tag> GetTag(int id);
-        void AddTag(Tag tag);
+        void CreateTag(Tag tag);
         void DeleteTag(Tag tag);
     }
 }

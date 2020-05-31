@@ -5,7 +5,7 @@ using Forum.Core.Concrete.Models;
 
 namespace Forum.Api.Mapper.AfterMaps
 {
-    public class UpdateTags : IMappingAction<PostRequest, Post>
+    public class UpdateTagsForPost : IMappingAction<PostRequest, Post>
     {
         public void Process(PostRequest postRequest, Post post, ResolutionContext context)
         {

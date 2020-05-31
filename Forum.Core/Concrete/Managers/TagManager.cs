@@ -25,7 +25,7 @@ namespace Forum.Core.Concrete.Managers
             return _tagRepository.GetAsync(id);
         }
 
-        public void AddTag(Tag tag)
+        public void CreateTag(Tag tag)
         {
             _tagRepository.Add(tag);
         }

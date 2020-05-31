@@ -8,7 +8,7 @@ namespace Forum.Core.Abstract.Managers
     {
         Task<List<Post>> GetAllPosts();
         Task<Post> GetPost(int id);
-        void AddPost(Post post);
-        void RemovePost(Post post);
+        void Create(Post post);
+        void DeletePost(Post post);
     }
 }

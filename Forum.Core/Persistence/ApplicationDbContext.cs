@@ -10,6 +10,7 @@ namespace Forum.Core.Persistence
         public DbSet<Post> Posts { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<PostTag> PostTags { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -20,6 +21,7 @@ namespace Forum.Core.Persistence
         {
             modelBuilder.ApplyConfiguration(new PostConfiguration());
             modelBuilder.ApplyConfiguration(new PostTagConfiguration());
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

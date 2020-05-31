@@ -17,10 +17,11 @@ namespace Forum.Api.Mapper
                     , opt => opt.Ignore())
                 .ForMember(p => p.PostTags
                     , opt => opt.Ignore())
-                .AfterMap<UpdateTags>();
+                .AfterMap<UpdateTagsForPost>();
 
             CreateMap<Post, PostResponse>()
-                .ForMember(p => p.PostTags, opt => opt.MapFrom(p => p.PostTags.Select(t => t.TagId)));
+                .ForMember(p => p.PostTags
+                    , opt => opt.MapFrom(p => p.PostTags.Select(t => t.TagId)));
 
 
             // Tag
@@ -28,6 +29,9 @@ namespace Forum.Api.Mapper
                 .ForMember(t => t.Id
                     , opt => opt.Ignore());
             CreateMap<Tag, TagResponse>();
+
+            // User
+            CreateMap<RegisterRequest, User>();
         }
     }
 }
