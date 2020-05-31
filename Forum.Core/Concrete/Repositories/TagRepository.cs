@@ -8,11 +8,8 @@ namespace Forum.Core.Concrete.Repositories
 {
     public class TagRepository : Repository<Tag>, ITagRepository
     {
-        private ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
-
         public TagRepository(DbContext context) : base(context)
         {
         }
-
     }
 }

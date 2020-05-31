@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Concrete.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Forum.Api.Controllers.v1
 {
@@ -16,12 +17,17 @@ namespace Forum.Api.Controllers.v1
     [Route("/api/v1/[controller]")]
     public class PostsController : ControllerBase
     {
+        private readonly UserManager<User> _userManager;
         private readonly IPostManager _postManager;
+        private readonly IReplyManager _replyManager;
         private readonly IMapper _mapper;
 
-        public PostsController(IPostManager postManager, IMapper mapper)
+        public PostsController(UserManager<User> userManager, IPostManager postManager, IMapper mapper,
+            IReplyManager replyManager)
         {
+            _userManager = userManager;
             _postManager = postManager;
+            _replyManager = replyManager;
             _mapper = mapper;
         }
 
@@ -93,6 +99,32 @@ namespace Forum.Api.Controllers.v1
             await _postManager.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpPost("{postId}/replies")]
+        public async Task<IActionResult> AddReplyToPost([FromRoute] int postId, [FromBody] ReplyRequest request)
+        {
+            if (postId != request.PostId)
+            {
+                return BadRequest();
+            }
+
+            var post = await _postManager.GetPostWithReplies(postId);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var authorId = _userManager.GetUserId(HttpContext.User);
+            var reply = _mapper.Map<Reply>(request);
+            reply.AuthorId = authorId;
+
+            _replyManager.AddReply(reply);
+            await _replyManager.SaveChangesAsync();
+
+            var response = _mapper.Map<ReplyResponse>(reply);
+
+            return CreatedAtAction(nameof(GetPost), new {id = postId}, response);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Forum.Api.Controllers
             {
                 return BadRequest();
             }
-
+            
             var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == request.UserName);
             var token = GenerateJwtToken(request.UserName, appUser);
 

@@ -98,8 +98,10 @@ namespace Forum.Api
             services.AddScoped<IPostManager, PostManager>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagManager, TagManager>();
+            services.AddScoped<IReplyRepository, ReplyRepository>();
+            services.AddScoped<IReplyManager, ReplyManager>();
         }
-
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

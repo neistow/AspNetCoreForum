@@ -11,7 +11,7 @@ namespace Forum.Core.Abstract.Repositories
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly DbContext Context;
-        private ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
+        protected ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
 
         public Repository(DbContext context)
         {

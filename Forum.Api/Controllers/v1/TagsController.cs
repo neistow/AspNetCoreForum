@@ -23,7 +23,7 @@ namespace Forum.Api.Controllers.v1
             _tagManager = tagManager;
             _mapper = mapper;
         }
-        
+
         [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetTags()

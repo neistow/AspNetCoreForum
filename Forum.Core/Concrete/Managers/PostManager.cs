@@ -25,6 +25,11 @@ namespace Forum.Core.Concrete.Managers
             return _postRepository.GetPostWithTags(id);
         }
 
+        public Task<Post> GetPostWithReplies(int id)
+        {
+            return _postRepository.GetPostWithReplies(id);
+        }
+
         public void AddPost(Post post)
         {
             _postRepository.Add(post);

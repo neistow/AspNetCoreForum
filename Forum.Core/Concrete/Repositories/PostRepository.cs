@@ -9,8 +9,6 @@ namespace Forum.Core.Concrete.Repositories
 {
     public class PostRepository : Repository<Post>, IPostRepository
     {
-        private ApplicationDbContext ApplicationDbContext => Context as ApplicationDbContext;
-
         public PostRepository(DbContext context) : base(context)
         {
         }
@@ -23,6 +21,13 @@ namespace Forum.Core.Concrete.Repositories
         public Task<Post> GetPostWithTags(int id)
         {
             return ApplicationDbContext.Posts.Include(p => p.PostTags).SingleOrDefaultAsync(p => p.Id == id);
+        }
+
+        public Task<Post> GetPostWithReplies(int id)
+        {
+            return ApplicationDbContext.Posts
+                .Include(p => p.Replies)
+                .SingleOrDefaultAsync(p => p.Id == id);
         }
     }
 }

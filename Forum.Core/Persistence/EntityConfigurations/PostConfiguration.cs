@@ -14,6 +14,10 @@ namespace Forum.Core.Persistence.EntityConfigurations
                 .WithMany(u => u.Posts)
                 .HasForeignKey(p => p.AuthorId).OnDelete(DeleteBehavior.NoAction);
 
+            entity.HasMany(p => p.Replies)
+                .WithOne(r => r.Post)
+                .HasForeignKey(r => r.PostId).OnDelete(DeleteBehavior.Cascade);
+            
             entity.Property(p => p.AuthorId).IsRequired();
             
             entity.Property(post => post.Title).HasMaxLength(55).IsRequired();

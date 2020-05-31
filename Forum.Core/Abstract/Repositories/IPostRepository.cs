@@ -8,5 +8,6 @@ namespace Forum.Core.Abstract.Repositories
     {
         Task<List<Post>> GetAllPostsWithTags();
         Task<Post> GetPostWithTags(int id);
+        Task<Post> GetPostWithReplies(int id);
     }
 }
