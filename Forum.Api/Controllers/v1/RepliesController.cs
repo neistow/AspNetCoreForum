@@ -19,6 +19,7 @@ namespace Forum.Api.Controllers.v1
     [Route("/api/v1/posts/")]
     public class RepliesController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly IReplyManager _replyManager;
         private readonly IPostManager _postManager;
         private readonly IMapper _mapper;
@@ -26,6 +27,7 @@ namespace Forum.Api.Controllers.v1
         public RepliesController(IReplyManager replyManager, IPostManager postManager, IMapper mapper,
             UserManager<User> userManager)
         {
+            _userManager = userManager;
             _replyManager = replyManager;
             _postManager = postManager;
             _mapper = mapper;
@@ -73,7 +75,7 @@ namespace Forum.Api.Controllers.v1
         {
             if (postId != request.PostId)
             {
-                return BadRequest();
+                return BadRequest("Post id in route doesn't match request post id");
             }
 
             var post = await _postManager.GetPostWithReplies(postId);
@@ -83,9 +85,16 @@ namespace Forum.Api.Controllers.v1
             }
 
             var reply = post.Replies.SingleOrDefault(p => p.Id == id);
+
             if (reply == null)
             {
                 return NotFound();
+            }
+
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            if (reply.AuthorId != currentUserId)
+            {
+                return Forbid();
             }
 
             _mapper.Map(request, reply);
@@ -107,7 +116,13 @@ namespace Forum.Api.Controllers.v1
 
             if (reply.PostId != postId)
             {
-                return BadRequest();
+                return BadRequest("Post id in route doesn't match request post id");
+            }
+
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            if (reply.AuthorId != currentUserId)
+            {
+                return Forbid();
             }
 
             _replyManager.RemoveReply(reply);

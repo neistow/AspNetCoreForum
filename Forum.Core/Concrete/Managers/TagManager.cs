@@ -35,6 +35,11 @@ namespace Forum.Core.Concrete.Managers
             _tagRepository.Remove(tag);
         }
 
+        public bool TagExists(int tagId)
+        {
+            return _tagRepository.Get(tagId) != null;
+        }
+
         public int SaveChanges()
         {
             return _tagRepository.SaveChanges();

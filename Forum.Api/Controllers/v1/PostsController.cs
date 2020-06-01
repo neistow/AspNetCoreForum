@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Forum.Api.Requests;
@@ -20,14 +21,16 @@ namespace Forum.Api.Controllers.v1
         private readonly UserManager<User> _userManager;
         private readonly IPostManager _postManager;
         private readonly IReplyManager _replyManager;
+        private readonly ITagManager _tagManager;
         private readonly IMapper _mapper;
 
         public PostsController(UserManager<User> userManager, IPostManager postManager, IMapper mapper,
-            IReplyManager replyManager)
+            IReplyManager replyManager, ITagManager tagManager)
         {
             _userManager = userManager;
             _postManager = postManager;
             _replyManager = replyManager;
+            _tagManager = tagManager;
             _mapper = mapper;
         }
 
@@ -59,6 +62,11 @@ namespace Forum.Api.Controllers.v1
         [HttpPost]
         public async Task<IActionResult> AddPost([FromBody] PostRequest postRequest)
         {
+            if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
+            {
+                return BadRequest("Post contains nonexistent tag(s)");
+            }
+
             var post = _mapper.Map<Post>(postRequest);
             post.AuthorId = _userManager.GetUserId(HttpContext.User);
 
@@ -78,6 +86,17 @@ namespace Forum.Api.Controllers.v1
                 return NotFound();
             }
 
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            if (postInDb.AuthorId != currentUserId)
+            {
+                return Forbid();
+            }
+
+            if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
+            {
+                return BadRequest("Post contains nonexistent tag(s)");
+            }
+            
             _mapper.Map(postRequest, postInDb);
             postInDb.DateEdited = DateTime.Now;
             await _postManager.SaveChangesAsync();
@@ -90,13 +109,19 @@ namespace Forum.Api.Controllers.v1
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost([FromRoute] int id)
         {
-            var post = await _postManager.GetPost(id);
-            if (post == null)
+            var postInDb = await _postManager.GetPost(id);
+            if (postInDb == null)
             {
                 return NotFound();
             }
+            
+            var currentUserId = _userManager.GetUserId(HttpContext.User);
+            if (postInDb.AuthorId != currentUserId)
+            {
+                return Forbid();
+            }
 
-            _postManager.RemovePost(post);
+            _postManager.RemovePost(postInDb);
             await _postManager.SaveChangesAsync();
 
             return Ok();

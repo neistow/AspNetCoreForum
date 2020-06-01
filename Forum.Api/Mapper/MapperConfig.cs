@@ -23,10 +23,10 @@ namespace Forum.Api.Mapper
                 .ForMember(p => p.PostTags, opt => opt.MapFrom(p => p.PostTags.Select(t => t.TagId)));
 
             // Reply
-            CreateMap<Reply, ReplyResponse>();
             CreateMap<ReplyRequest, Reply>()
                 .ForMember(r => r.Id
                     , opt => opt.Ignore());
+            CreateMap<Reply, ReplyResponse>();
 
 
             // Tag
@@ -39,7 +39,9 @@ namespace Forum.Api.Mapper
             CreateMap<RegisterRequest, User>();
 
             // Token
-            // CreateMap<string,TokenResponse>();
+            CreateMap<string, TokenResponse>()
+                .ForMember(t => t.Token
+                    , opt => opt.MapFrom(t => t));
         }
     }
 }

@@ -10,5 +10,6 @@ namespace Forum.Core.Abstract.Managers
         ValueTask<Tag> GetTag(int id);
         void AddTag(Tag tag);
         void DeleteTag(Tag tag);
+        bool TagExists(int tagId);
     }
 }
