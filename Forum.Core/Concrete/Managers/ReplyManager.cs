@@ -7,38 +7,41 @@ namespace Forum.Core.Concrete.Managers
 {
     public class ReplyManager : IReplyManager
     {
-        private readonly IReplyRepository _repository;
-        private readonly IPostManager _postManager;
+        private readonly IReplyRepository _replyRepository;
 
-        public ReplyManager(IReplyRepository repository, IPostManager postManager)
+        public ReplyManager(IReplyRepository replyRepository)
         {
-            _repository = repository;
-            _postManager = postManager;
+            _replyRepository = replyRepository;
         }
 
         public ValueTask<Reply> GetReply(int id)
         {
-            return _repository.GetAsync(id);
+            return _replyRepository.GetAsync(id);
+        }
+
+        public async Task<bool> ReplyExists(int id)
+        {
+            return await _replyRepository.GetAsync(id) != null;
         }
 
         public void AddReply(Reply reply)
         {
-            _repository.Add(reply);
+            _replyRepository.Add(reply);
         }
 
         public void RemoveReply(Reply reply)
         {
-            _repository.Remove(reply);
+            _replyRepository.Remove(reply);
         }
 
         public int SaveChanges()
         {
-            return _repository.SaveChanges();
+            return _replyRepository.SaveChanges();
         }
 
         public Task<int> SaveChangesAsync()
         {
-            return _repository.SaveChangesAsync();
+            return _replyRepository.SaveChangesAsync();
         }
     }
 }

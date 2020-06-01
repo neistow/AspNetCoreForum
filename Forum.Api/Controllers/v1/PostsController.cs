@@ -96,7 +96,7 @@ namespace Forum.Api.Controllers.v1
             {
                 return BadRequest("Post contains nonexistent tag(s)");
             }
-            
+
             _mapper.Map(postRequest, postInDb);
             postInDb.DateEdited = DateTime.Now;
             await _postManager.SaveChangesAsync();
@@ -114,7 +114,7 @@ namespace Forum.Api.Controllers.v1
             {
                 return NotFound();
             }
-            
+
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (postInDb.AuthorId != currentUserId)
             {
@@ -135,13 +135,13 @@ namespace Forum.Api.Controllers.v1
                 return BadRequest();
             }
 
-            var post = await _postManager.GetPostWithReplies(postId);
-            if (post == null)
+            if (!await _postManager.PostExists(postId))
             {
                 return NotFound();
             }
 
             var authorId = _userManager.GetUserId(HttpContext.User);
+
             var reply = _mapper.Map<Reply>(request);
             reply.AuthorId = authorId;
 

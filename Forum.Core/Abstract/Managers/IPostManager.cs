@@ -9,6 +9,7 @@ namespace Forum.Core.Abstract.Managers
         Task<List<Post>> GetAllPosts();
         Task<Post> GetPost(int id);
         Task<Post> GetPostWithReplies(int id);
+        Task<bool> PostExists(int id);
         void AddPost(Post post);
         void RemovePost(Post post);
     }

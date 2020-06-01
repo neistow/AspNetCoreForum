@@ -30,6 +30,11 @@ namespace Forum.Core.Concrete.Managers
             return _postRepository.GetPostWithReplies(id);
         }
 
+        public async Task<bool> PostExists(int id)
+        {
+            return await _postRepository.GetAsync(id) != null;
+        }
+
         public void AddPost(Post post)
         {
             _postRepository.Add(post);

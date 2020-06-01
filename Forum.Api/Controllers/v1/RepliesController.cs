@@ -52,13 +52,12 @@ namespace Forum.Api.Controllers.v1
         [HttpGet("{postId}/replies/{replyId}")]
         public async Task<IActionResult> GetReply([FromRoute] int postId, [FromRoute] int replyId)
         {
-            var post = await _postManager.GetPostWithReplies(postId);
-            if (post == null)
+            if (!await _postManager.PostExists(postId))
             {
                 return NotFound();
             }
 
-            var reply = post.Replies.SingleOrDefault(r => r.Id == replyId);
+            var reply = await _replyManager.GetReply(replyId);
             if (reply == null)
             {
                 return NotFound();
@@ -78,14 +77,12 @@ namespace Forum.Api.Controllers.v1
                 return BadRequest("Post id in route doesn't match request post id");
             }
 
-            var post = await _postManager.GetPostWithReplies(postId);
-            if (post == null)
+            if (!await _postManager.PostExists(postId))
             {
                 return NotFound();
             }
 
-            var reply = post.Replies.SingleOrDefault(p => p.Id == id);
-
+            var reply = await _replyManager.GetReply(id);
             if (reply == null)
             {
                 return NotFound();
@@ -99,7 +96,7 @@ namespace Forum.Api.Controllers.v1
 
             _mapper.Map(request, reply);
             reply.DateEdited = DateTime.Now;
-            await _postManager.SaveChangesAsync();
+            await _replyManager.SaveChangesAsync();
 
             var response = _mapper.Map<ReplyResponse>(reply);
             return Ok(response);
