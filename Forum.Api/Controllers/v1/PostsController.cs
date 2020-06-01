@@ -60,6 +60,7 @@ namespace Forum.Api.Controllers.v1
         public async Task<IActionResult> AddPost([FromBody] PostRequest postRequest)
         {
             var post = _mapper.Map<Post>(postRequest);
+            post.AuthorId = _userManager.GetUserId(HttpContext.User);
 
             _postManager.AddPost(post);
             await _postManager.SaveChangesAsync();

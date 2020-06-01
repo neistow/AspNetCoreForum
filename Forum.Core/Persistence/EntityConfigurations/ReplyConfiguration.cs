@@ -12,14 +12,11 @@ namespace Forum.Core.Persistence.EntityConfigurations
 
             entity.HasOne(r => r.Post)
                 .WithMany(p => p.Replies)
-                .HasForeignKey(r => r.PostId).OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(r => r.PostId).IsRequired();
 
             entity.HasOne(r => r.Author)
                 .WithMany(u => u.Replies)
-                .HasForeignKey(r => r.AuthorId).OnDelete(DeleteBehavior.NoAction);
-
-            entity.Property(r => r.PostId).IsRequired();
-            entity.Property(r => r.AuthorId).IsRequired();
+                .HasForeignKey(r => r.AuthorId).IsRequired();
 
             entity.Property(r => r.Text).HasMaxLength(1000).IsRequired();
             entity.Property(r => r.DateCreated).ValueGeneratedOnAdd();
