@@ -45,13 +45,13 @@ namespace Forum.Api.Controllers.v1
         }
 
         [AllowAnonymous]
-        [HttpGet("{id}")]
+        [HttpGet("{id:min(1)}")]
         public async Task<IActionResult> GetPost([FromRoute] int id)
         {
             var post = await _postManager.GetPost(id);
             if (post == null)
             {
-                return NotFound();
+                return NotFound("Post does not exist.");
             }
 
             var response = _mapper.Map<PostResponse>(post);
@@ -77,19 +77,45 @@ namespace Forum.Api.Controllers.v1
             return CreatedAtAction(nameof(GetPost), new {id = post.Id}, response);
         }
 
-        [HttpPut("{id}")]
+        [HttpPost("{postId:min(1)}/replies")]
+        public async Task<IActionResult> AddReplyToPost([FromRoute] int postId, [FromBody] ReplyRequest request)
+        {
+            if (postId != request.PostId)
+            {
+                return BadRequest("Post id in route doesn't match post id in request");
+            }
+
+            if (!await _postManager.PostExists(postId))
+            {
+                return NotFound("Post does not exist");
+            }
+
+            var authorId = _userManager.GetUserId(HttpContext.User);
+
+            var reply = _mapper.Map<Reply>(request);
+            reply.AuthorId = authorId;
+
+            _replyManager.AddReply(reply);
+            await _replyManager.SaveChangesAsync();
+
+            var response = _mapper.Map<ReplyResponse>(reply);
+
+            return CreatedAtAction(nameof(GetPost), new {id = postId}, response);
+        }
+
+        [HttpPut("{id:min(1)}")]
         public async Task<IActionResult> UpdatePost([FromRoute] int id, [FromBody] PostRequest postRequest)
         {
             var postInDb = await _postManager.GetPost(id);
             if (postInDb == null)
             {
-                return NotFound();
+                return NotFound("Post does not exist");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (postInDb.AuthorId != currentUserId)
             {
-                return Forbid();
+                return Forbid("You are not author of the post");
             }
 
             if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
@@ -106,51 +132,25 @@ namespace Forum.Api.Controllers.v1
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:min(1)}")]
         public async Task<IActionResult> DeletePost([FromRoute] int id)
         {
             var postInDb = await _postManager.GetPost(id);
             if (postInDb == null)
             {
-                return NotFound();
+                return NotFound("Post does not exist");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (postInDb.AuthorId != currentUserId)
             {
-                return Forbid();
+                return Forbid("You are not author of post");
             }
 
             _postManager.RemovePost(postInDb);
             await _postManager.SaveChangesAsync();
 
             return Ok();
-        }
-
-        [HttpPost("{postId}/replies")]
-        public async Task<IActionResult> AddReplyToPost([FromRoute] int postId, [FromBody] ReplyRequest request)
-        {
-            if (postId != request.PostId)
-            {
-                return BadRequest();
-            }
-
-            if (!await _postManager.PostExists(postId))
-            {
-                return NotFound();
-            }
-
-            var authorId = _userManager.GetUserId(HttpContext.User);
-
-            var reply = _mapper.Map<Reply>(request);
-            reply.AuthorId = authorId;
-
-            _replyManager.AddReply(reply);
-            await _replyManager.SaveChangesAsync();
-
-            var response = _mapper.Map<ReplyResponse>(reply);
-
-            return CreatedAtAction(nameof(GetPost), new {id = postId}, response);
         }
     }
 }

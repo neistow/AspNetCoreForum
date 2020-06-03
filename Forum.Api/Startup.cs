@@ -54,14 +54,13 @@ namespace Forum.Api
                         mySqlOptions.ServerVersion(Configuration["Data:ServerVersion"])));
 
             services.AddControllers(options => options.OutputFormatters.Clear())
-                .AddNewtonsoftJson(o => { o.UseMemberCasing(); }).AddFluentValidation(fv =>
+                .AddNewtonsoftJson(o => { o.UseCamelCasing(processDictionaryKeys:true); }).AddFluentValidation(fv =>
                 {
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                     fv.RegisterValidatorsFromAssemblyContaining<TagRequestValidator>();
                 });
 
             // Identity
-
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

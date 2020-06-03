@@ -35,13 +35,13 @@ namespace Forum.Api.Controllers.v1
         }
 
         [AllowAnonymous]
-        [HttpGet("{id}")]
+        [HttpGet("{id:min(1)}")]
         public async Task<IActionResult> GetTag([FromRoute] int id)
         {
             var tag = await _tagManager.GetTag(id);
             if (tag == null)
             {
-                return NotFound();
+                return NotFound("Tag does not exist");
             }
 
             var response = _mapper.Map<TagResponse>(tag);
@@ -61,13 +61,13 @@ namespace Forum.Api.Controllers.v1
             return CreatedAtAction(nameof(GetTag), new {id = tag.Id}, response);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:min(1)}")]
         public async Task<IActionResult> UpdateTag([FromRoute] int id, [FromBody] TagRequest tagRequest)
         {
             var tagInDb = await _tagManager.GetTag(id);
             if (tagInDb == null)
             {
-                return NotFound();
+                return NotFound("Tag does not exist");
             }
 
             _mapper.Map(tagRequest, tagInDb);
@@ -78,13 +78,13 @@ namespace Forum.Api.Controllers.v1
             return Ok(response);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:min(1)}")]
         public async Task<IActionResult> DeleteTag([FromRoute] int id)
         {
             var tag = await _tagManager.GetTag(id);
             if (tag == null)
             {
-                return NotFound();
+                return NotFound("Tag does not exist");
             }
 
             _tagManager.DeleteTag(tag);

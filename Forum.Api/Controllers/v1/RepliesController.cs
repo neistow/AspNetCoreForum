@@ -17,7 +17,7 @@ namespace Forum.Api.Controllers.v1
     [Authorize]
     [ApiController]
     [Route("/api/v1/posts/")]
-    public class RepliesController : Controller
+    public class RepliesController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly IReplyManager _replyManager;
@@ -34,13 +34,13 @@ namespace Forum.Api.Controllers.v1
         }
 
         [AllowAnonymous]
-        [HttpGet("{postId}/replies")]
+        [HttpGet("{postId:min(1)}/replies")]
         public async Task<IActionResult> GetAllReplies([FromRoute] int postId)
         {
             var post = await _postManager.GetPostWithReplies(postId);
             if (post == null)
             {
-                return NotFound();
+                return NotFound("Post does not exist");
             }
 
             var response = _mapper.Map<IEnumerable<ReplyResponse>>(post.Replies);
@@ -49,18 +49,18 @@ namespace Forum.Api.Controllers.v1
         }
 
         [AllowAnonymous]
-        [HttpGet("{postId}/replies/{replyId}")]
+        [HttpGet("{postId:min(1)}/replies/{replyId:min(1)}")]
         public async Task<IActionResult> GetReply([FromRoute] int postId, [FromRoute] int replyId)
         {
             if (!await _postManager.PostExists(postId))
             {
-                return NotFound();
+                return NotFound("Post does not exist");
             }
 
             var reply = await _replyManager.GetReply(replyId);
             if (reply == null)
             {
-                return NotFound();
+                return NotFound("Reply does not exist");
             }
 
             var response = _mapper.Map<ReplyResponse>(reply);
@@ -68,7 +68,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(response);
         }
 
-        [HttpPut("{postId}/replies/{id}")]
+        [HttpPut("{postId:min(1)}/replies/{id:min(1)}")]
         public async Task<IActionResult> EditReply([FromRoute] int postId, [FromRoute] int id,
             [FromBody] ReplyRequest request)
         {
@@ -79,19 +79,19 @@ namespace Forum.Api.Controllers.v1
 
             if (!await _postManager.PostExists(postId))
             {
-                return NotFound();
+                return NotFound("Post does not exist");
             }
 
             var reply = await _replyManager.GetReply(id);
             if (reply == null)
             {
-                return NotFound();
+                return NotFound("Reply does not exist");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (reply.AuthorId != currentUserId)
             {
-                return Forbid();
+                return Forbid("You are not author of reply");
             }
 
             _mapper.Map(request, reply);
@@ -102,13 +102,13 @@ namespace Forum.Api.Controllers.v1
             return Ok(response);
         }
 
-        [HttpDelete("{postId}/replies/{replyId}")]
+        [HttpDelete("{postId:min(1)}/replies/{replyId:min(1)}")]
         public async Task<IActionResult> DeleteReply([FromRoute] int postId, [FromRoute] int replyId)
         {
             var reply = await _replyManager.GetReply(replyId);
             if (reply == null)
             {
-                return NotFound();
+                return NotFound("Reply not found");
             }
 
             if (reply.PostId != postId)
@@ -119,7 +119,7 @@ namespace Forum.Api.Controllers.v1
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (reply.AuthorId != currentUserId)
             {
-                return Forbid();
+                return Forbid("You are not author of reply");
             }
 
             _replyManager.RemoveReply(reply);

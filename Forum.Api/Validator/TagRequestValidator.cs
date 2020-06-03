@@ -7,6 +7,8 @@ namespace Forum.Api.Validator
     {
         public TagRequestValidator()
         {
+            RuleFor(tagRequest => tagRequest.Id).GreaterThanOrEqualTo(1);
+
             RuleFor(tagRequest => tagRequest.Name).NotEmpty().WithMessage("Tag Is Empty.");
             RuleFor(tagRequest => tagRequest.Name).MaximumLength(55).WithMessage("Tag Name Is Too Long.");
         }
