@@ -4,13 +4,14 @@ using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Abstract.Managers;
+using Forum.Core.Concrete.Constants;
 using Forum.Core.Concrete.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Api.Controllers.v1
 {
-    [Authorize]
+    [Authorize(Roles = Roles.Admin)]
     [ApiController]
     [Route("/api/v1/[controller]")]
     public class TagsController : ControllerBase

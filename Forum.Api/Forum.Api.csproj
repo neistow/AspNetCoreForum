@@ -21,8 +21,4 @@
       <ProjectReference Include="..\Forum.Core\Forum.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Helpers" />
-    </ItemGroup>
-
 </Project>

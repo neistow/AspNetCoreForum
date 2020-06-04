@@ -41,7 +41,7 @@ namespace Forum.Api.Controllers
             {
                 return NotFound("User does not exist");
             }
-            
+
             var response = _mapper.Map<UserResponse>(user);
             return Ok(response);
         }

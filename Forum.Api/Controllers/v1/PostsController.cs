@@ -7,6 +7,7 @@ using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Forum.Core.Abstract.Managers;
+using Forum.Core.Concrete.Constants;
 using Forum.Core.Concrete.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -112,10 +113,10 @@ namespace Forum.Api.Controllers.v1
                 return NotFound("Post does not exist.");
             }
 
-            var currentUserId = _userManager.GetUserId(HttpContext.User);
-            if (postInDb.AuthorId != currentUserId)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (postInDb.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
             {
-                return Forbid("You are not author of the post.");
+                return BadRequest("You are not author of the post.");
             }
 
             if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
@@ -141,10 +142,10 @@ namespace Forum.Api.Controllers.v1
                 return NotFound("Post does not exist.");
             }
 
-            var currentUserId = _userManager.GetUserId(HttpContext.User);
-            if (postInDb.AuthorId != currentUserId)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (postInDb.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
             {
-                return Forbid("You are not author of post.");
+                return BadRequest("You are not author of the post.");
             }
 
             _postManager.RemovePost(postInDb);

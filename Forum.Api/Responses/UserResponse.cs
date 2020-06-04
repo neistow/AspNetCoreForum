@@ -1,4 +1,5 @@
-﻿namespace Forum.Api.Responses
+﻿
+namespace Forum.Api.Responses
 {
     public class UserResponse
     {

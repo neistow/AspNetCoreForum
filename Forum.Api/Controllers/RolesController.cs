@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
+using Forum.Core.Concrete.Constants;
 using Forum.Core.Concrete.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Api.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = Roles.Admin)]
     [ApiController]
     [Route("[controller]")]
     public class RolesController : ControllerBase

@@ -7,6 +7,7 @@ using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Abstract.Managers;
+using Forum.Core.Concrete.Constants;
 using Forum.Core.Concrete.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -88,10 +89,10 @@ namespace Forum.Api.Controllers.v1
                 return NotFound("Reply does not exist.");
             }
 
-            var currentUserId = _userManager.GetUserId(HttpContext.User);
-            if (reply.AuthorId != currentUserId)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (reply.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
             {
-                return Forbid("You are not author of reply.");
+                return BadRequest("You are not author of reply.");
             }
 
             _mapper.Map(request, reply);
@@ -116,10 +117,10 @@ namespace Forum.Api.Controllers.v1
                 return BadRequest("Post id in route doesn't match request post id.");
             }
 
-            var currentUserId = _userManager.GetUserId(HttpContext.User);
-            if (reply.AuthorId != currentUserId)
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (reply.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
             {
-                return Forbid("You are not author of reply.");
+                return BadRequest("You are not author of reply.");
             }
 
             _replyManager.RemoveReply(reply);
