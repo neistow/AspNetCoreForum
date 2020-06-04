@@ -104,7 +104,7 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPut("{id:min(1)}")]
-        public async Task<IActionResult> UpdatePost([FromRoute] int id, [FromBody] PostRequest postRequest)
+        public async Task<IActionResult> EditPost([FromRoute] int id, [FromBody] PostRequest postRequest)
         {
             var postInDb = await _postManager.GetPost(id);
             if (postInDb == null)

@@ -22,16 +22,17 @@ namespace Forum.Api.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<User> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
         public AccountsController(UserManager<User> userManager, SignInManager<User> signInManager,
-            IConfiguration configuration, IMapper mapper
-        )
+            IConfiguration configuration, IMapper mapper, RoleManager<User> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _roleManager = roleManager;
             _mapper = mapper;
         }
 

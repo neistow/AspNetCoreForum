@@ -4,6 +4,7 @@ using Forum.Api.Mapper.AfterMaps;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Concrete.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Forum.Api.Mapper
 {
@@ -37,6 +38,12 @@ namespace Forum.Api.Mapper
 
             // User
             CreateMap<RegisterRequest, User>();
+            CreateMap<User, UserResponse>();
+
+            // Role
+            CreateMap<RoleRequest, IdentityRole>();
+            CreateMap<IdentityRole, RoleResponse>();
+
 
             // Token
             CreateMap<string, TokenResponse>()

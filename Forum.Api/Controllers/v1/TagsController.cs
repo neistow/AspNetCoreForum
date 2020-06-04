@@ -62,8 +62,13 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPut("{id:min(1)}")]
-        public async Task<IActionResult> UpdateTag([FromRoute] int id, [FromBody] TagRequest tagRequest)
+        public async Task<IActionResult> EditTag([FromRoute] int id, [FromBody] TagRequest tagRequest)
         {
+            if (id != tagRequest.Id)
+            {
+                return BadRequest("Tag id in route doesn't match tag id in request");
+            }
+            
             var tagInDb = await _tagManager.GetTag(id);
             if (tagInDb == null)
             {
