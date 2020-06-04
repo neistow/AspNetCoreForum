@@ -4,12 +4,14 @@ using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Api.Controllers
 {
+    [Authorize(Roles = "admin")]
     [ApiController]
     [Route("[controller]")]
     public class RolesController : ControllerBase
@@ -25,6 +27,7 @@ namespace Forum.Api.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

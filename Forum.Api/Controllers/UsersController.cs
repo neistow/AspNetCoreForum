@@ -33,7 +33,7 @@ namespace Forum.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{username:alpha}")]
+        [HttpGet("{username}")]
         public async Task<IActionResult> GetUser(string username)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.NormalizedUserName == username.Normalize());

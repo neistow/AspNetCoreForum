@@ -22,17 +22,15 @@ namespace Forum.Api.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<User> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
         public AccountsController(UserManager<User> userManager, SignInManager<User> signInManager,
-            IConfiguration configuration, IMapper mapper, RoleManager<User> roleManager)
+            IConfiguration configuration, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
-            _roleManager = roleManager;
             _mapper = mapper;
         }
 
@@ -45,8 +43,8 @@ namespace Forum.Api.Controllers
                 return BadRequest("Login Failed.");
             }
 
-            var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == request.UserName);
-            var token = GenerateJwtToken(request.UserName, appUser);
+            var user = _userManager.Users.SingleOrDefault(r => r.UserName == request.UserName);
+            var token = await GenerateJwtToken(user);
 
             var response = new TokenResponse {Token = token};
             return Ok(response);
@@ -67,13 +65,16 @@ namespace Forum.Api.Controllers
             return Ok("Successfully registered.");
         }
 
-        private string GenerateJwtToken(string email, IdentityUser user)
+        private async Task<string> GenerateJwtToken(User user)
         {
+            var roles = await _userManager.GetRolesAsync(user);
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.UserName),
+                new Claim(ClaimTypes.Role, string.Join(",", roles)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:JwtKey"]));
@@ -87,8 +88,8 @@ namespace Forum.Api.Controllers
                 expires: expires,
                 signingCredentials: credentials
             );
-            var result = new JwtSecurityTokenHandler().WriteToken(token);
 
+            var result = new JwtSecurityTokenHandler().WriteToken(token);
             return result;
         }
     }

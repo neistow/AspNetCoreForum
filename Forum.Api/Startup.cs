@@ -59,17 +59,15 @@ namespace Forum.Api
                 o.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}));
 
             services.AddControllers(options => options.OutputFormatters.Clear())
-                .AddNewtonsoftJson(o => { o.UseCamelCasing(processDictionaryKeys: true); }).AddFluentValidation(fv =>
+                .AddNewtonsoftJson(o => { o.UseCamelCasing(processDictionaryKeys: true); })
+                .AddFluentValidation(fv =>
                 {
                     fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
                     fv.RegisterValidatorsFromAssemblyContaining<TagRequestValidator>();
                 });
 
             // Identity
-            services.AddIdentity<User, IdentityRole>(o =>
-                {
-                    o.User.RequireUniqueEmail = true;
-                })
+            services.AddIdentity<User, IdentityRole>(o => { o.User.RequireUniqueEmail = true; })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
