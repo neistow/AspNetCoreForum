@@ -64,7 +64,7 @@ namespace Forum.Api.Controllers.v1
         {
             if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
             {
-                return BadRequest("Post contains nonexistent tag(s)");
+                return BadRequest("Post contains nonexistent tag(s).");
             }
 
             var post = _mapper.Map<Post>(postRequest);
@@ -82,12 +82,12 @@ namespace Forum.Api.Controllers.v1
         {
             if (postId != request.PostId)
             {
-                return BadRequest("Post id in route doesn't match post id in request");
+                return BadRequest("Post id in route doesn't match post id in request.");
             }
 
             if (!await _postManager.PostExists(postId))
             {
-                return NotFound("Post does not exist");
+                return NotFound("Post does not exist.");
             }
 
             var authorId = _userManager.GetUserId(HttpContext.User);
@@ -109,18 +109,18 @@ namespace Forum.Api.Controllers.v1
             var postInDb = await _postManager.GetPost(id);
             if (postInDb == null)
             {
-                return NotFound("Post does not exist");
+                return NotFound("Post does not exist.");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (postInDb.AuthorId != currentUserId)
             {
-                return Forbid("You are not author of the post");
+                return Forbid("You are not author of the post.");
             }
 
             if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
             {
-                return BadRequest("Post contains nonexistent tag(s)");
+                return BadRequest("Post contains nonexistent tag(s).");
             }
 
             _mapper.Map(postRequest, postInDb);
@@ -138,13 +138,13 @@ namespace Forum.Api.Controllers.v1
             var postInDb = await _postManager.GetPost(id);
             if (postInDb == null)
             {
-                return NotFound("Post does not exist");
+                return NotFound("Post does not exist.");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (postInDb.AuthorId != currentUserId)
             {
-                return Forbid("You are not author of post");
+                return Forbid("You are not author of post.");
             }
 
             _postManager.RemovePost(postInDb);

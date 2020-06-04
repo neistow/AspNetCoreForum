@@ -41,7 +41,7 @@ namespace Forum.Api.Controllers.v1
             var tag = await _tagManager.GetTag(id);
             if (tag == null)
             {
-                return NotFound("Tag does not exist");
+                return NotFound("Tag does not exist.");
             }
 
             var response = _mapper.Map<TagResponse>(tag);
@@ -67,7 +67,7 @@ namespace Forum.Api.Controllers.v1
             var tagInDb = await _tagManager.GetTag(id);
             if (tagInDb == null)
             {
-                return NotFound("Tag does not exist");
+                return NotFound("Tag does not exist.");
             }
 
             _mapper.Map(tagRequest, tagInDb);
@@ -84,7 +84,7 @@ namespace Forum.Api.Controllers.v1
             var tag = await _tagManager.GetTag(id);
             if (tag == null)
             {
-                return NotFound("Tag does not exist");
+                return NotFound("Tag does not exist.");
             }
 
             _tagManager.DeleteTag(tag);

@@ -41,13 +41,13 @@ namespace Forum.Api.Controllers
             var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, false, false);
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest("Login Failed.");
             }
-            
+
             var appUser = _userManager.Users.SingleOrDefault(r => r.UserName == request.UserName);
             var token = GenerateJwtToken(request.UserName, appUser);
 
-            var response = new TokenResponse{Token = token};
+            var response = new TokenResponse {Token = token};
             return Ok(response);
         }
 
@@ -60,10 +60,10 @@ namespace Forum.Api.Controllers
 
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
 
-            return Ok();
+            return Ok("Successfully registered.");
         }
 
         private string GenerateJwtToken(string email, IdentityUser user)

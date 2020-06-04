@@ -40,7 +40,7 @@ namespace Forum.Api.Controllers.v1
             var post = await _postManager.GetPostWithReplies(postId);
             if (post == null)
             {
-                return NotFound("Post does not exist");
+                return NotFound("Post does not exist.");
             }
 
             var response = _mapper.Map<IEnumerable<ReplyResponse>>(post.Replies);
@@ -54,13 +54,13 @@ namespace Forum.Api.Controllers.v1
         {
             if (!await _postManager.PostExists(postId))
             {
-                return NotFound("Post does not exist");
+                return NotFound("Post does not exist.");
             }
 
             var reply = await _replyManager.GetReply(replyId);
             if (reply == null)
             {
-                return NotFound("Reply does not exist");
+                return NotFound("Reply does not exist.");
             }
 
             var response = _mapper.Map<ReplyResponse>(reply);
@@ -74,24 +74,24 @@ namespace Forum.Api.Controllers.v1
         {
             if (postId != request.PostId)
             {
-                return BadRequest("Post id in route doesn't match request post id");
+                return BadRequest("Post id in route doesn't match request post id.");
             }
 
             if (!await _postManager.PostExists(postId))
             {
-                return NotFound("Post does not exist");
+                return NotFound("Post does not exist.");
             }
 
             var reply = await _replyManager.GetReply(id);
             if (reply == null)
             {
-                return NotFound("Reply does not exist");
+                return NotFound("Reply does not exist.");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (reply.AuthorId != currentUserId)
             {
-                return Forbid("You are not author of reply");
+                return Forbid("You are not author of reply.");
             }
 
             _mapper.Map(request, reply);
@@ -108,18 +108,18 @@ namespace Forum.Api.Controllers.v1
             var reply = await _replyManager.GetReply(replyId);
             if (reply == null)
             {
-                return NotFound("Reply not found");
+                return NotFound("Reply not found.");
             }
 
             if (reply.PostId != postId)
             {
-                return BadRequest("Post id in route doesn't match request post id");
+                return BadRequest("Post id in route doesn't match request post id.");
             }
 
             var currentUserId = _userManager.GetUserId(HttpContext.User);
             if (reply.AuthorId != currentUserId)
             {
-                return Forbid("You are not author of reply");
+                return Forbid("You are not author of reply.");
             }
 
             _replyManager.RemoveReply(reply);
