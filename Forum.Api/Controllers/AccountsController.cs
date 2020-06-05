@@ -9,6 +9,7 @@ using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Concrete.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpPost("token")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Token([FromBody] LoginRequest request)
         {
             var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, false, false);
@@ -51,6 +54,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
             var user = _mapper.Map<User>(request);

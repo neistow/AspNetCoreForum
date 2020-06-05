@@ -37,6 +37,7 @@ namespace Forum.Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetPosts()
         {
             var posts = await _postManager.GetAllPosts();
@@ -47,6 +48,8 @@ namespace Forum.Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet("{id:min(1)}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetPost([FromRoute] int id)
         {
             var post = await _postManager.GetPost(id);
@@ -61,6 +64,8 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> AddPost([FromBody] PostRequest postRequest)
         {
             if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
@@ -78,33 +83,12 @@ namespace Forum.Api.Controllers.v1
             return CreatedAtAction(nameof(GetPost), new {id = post.Id}, response);
         }
 
-        [HttpPost("{postId:min(1)}/replies")]
-        public async Task<IActionResult> AddReplyToPost([FromRoute] int postId, [FromBody] ReplyRequest request)
-        {
-            if (postId != request.PostId)
-            {
-                return BadRequest("Post id in route doesn't match post id in request.");
-            }
 
-            if (!await _postManager.PostExists(postId))
-            {
-                return NotFound("Post does not exist.");
-            }
-
-            var authorId = _userManager.GetUserId(HttpContext.User);
-
-            var reply = _mapper.Map<Reply>(request);
-            reply.AuthorId = authorId;
-
-            _replyManager.AddReply(reply);
-            await _replyManager.SaveChangesAsync();
-
-            var response = _mapper.Map<ReplyResponse>(reply);
-
-            return CreatedAtAction(nameof(GetPost), new {id = postId}, response);
-        }
 
         [HttpPut("{id:min(1)}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> EditPost([FromRoute] int id, [FromBody] PostRequest postRequest)
         {
             var postInDb = await _postManager.GetPost(id);
@@ -134,6 +118,9 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpDelete("{id:min(1)}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeletePost([FromRoute] int id)
         {
             var postInDb = await _postManager.GetPost(id);

@@ -30,6 +30,7 @@ namespace Forum.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetAll()
         {
             var roles = await _roleManager.Roles.ToListAsync();
@@ -39,6 +40,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Create([FromBody] RoleRequest request)
         {
             var role = _mapper.Map<IdentityRole>(request);
@@ -53,6 +56,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpPost("assign")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
@@ -72,6 +77,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpPost("remove")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> RemoveRole([FromBody] RemoveRoleRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.UserName);
@@ -91,6 +98,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpDelete]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> Delete([FromBody] RoleRequest request)
         {
             var roleInDb = await _roleManager.FindByNameAsync(request.Name);

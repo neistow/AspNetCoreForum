@@ -25,6 +25,7 @@ namespace Forum.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -34,6 +35,8 @@ namespace Forum.Api.Controllers
         }
 
         [HttpGet("{username}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetUser(string username)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.NormalizedUserName == username.Normalize());

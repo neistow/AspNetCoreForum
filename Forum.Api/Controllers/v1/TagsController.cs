@@ -27,6 +27,7 @@ namespace Forum.Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetTags()
         {
             var tags = await _tagManager.GetAllTags();
@@ -37,6 +38,7 @@ namespace Forum.Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet("{id:min(1)}")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetTag([FromRoute] int id)
         {
             var tag = await _tagManager.GetTag(id);
@@ -51,6 +53,7 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPost]
+        [ProducesResponseType(201)]
         public async Task<IActionResult> AddTag([FromBody] TagRequest tagRequest)
         {
             var tag = _mapper.Map<Tag>(tagRequest);
@@ -63,6 +66,9 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPut("{id:min(1)}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> EditTag([FromRoute] int id, [FromBody] TagRequest tagRequest)
         {
             if (id != tagRequest.Id)
@@ -85,6 +91,8 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpDelete("{id:min(1)}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteTag([FromRoute] int id)
         {
             var tag = await _tagManager.GetTag(id);
