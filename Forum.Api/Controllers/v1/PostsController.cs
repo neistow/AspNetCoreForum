@@ -21,16 +21,14 @@ namespace Forum.Api.Controllers.v1
     {
         private readonly UserManager<User> _userManager;
         private readonly IPostManager _postManager;
-        private readonly IReplyManager _replyManager;
         private readonly ITagManager _tagManager;
         private readonly IMapper _mapper;
 
         public PostsController(UserManager<User> userManager, IPostManager postManager, IMapper mapper,
-            IReplyManager replyManager, ITagManager tagManager)
+            ITagManager tagManager)
         {
             _userManager = userManager;
             _postManager = postManager;
-            _replyManager = replyManager;
             _tagManager = tagManager;
             _mapper = mapper;
         }
@@ -82,8 +80,6 @@ namespace Forum.Api.Controllers.v1
             var response = _mapper.Map<PostResponse>(post);
             return CreatedAtAction(nameof(GetPost), new {id = post.Id}, response);
         }
-
-
 
         [HttpPut("{id:min(1)}")]
         [ProducesResponseType(200)]

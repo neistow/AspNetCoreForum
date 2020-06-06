@@ -72,7 +72,7 @@ namespace Forum.Api.Controllers.v1
 
             return Ok(response);
         }
-        
+
         [HttpPost("{postId:min(1)}/replies")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -99,9 +99,9 @@ namespace Forum.Api.Controllers.v1
 
             var response = _mapper.Map<ReplyResponse>(reply);
 
-            return CreatedAtAction(nameof(GetReply), new {id = reply.Id}, response);
+            return CreatedAtAction(nameof(GetReply), new {postId = postId, replyId = reply.Id}, response);
         }
-        
+
         [HttpPut("{postId:min(1)}/replies/{id:min(1)}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

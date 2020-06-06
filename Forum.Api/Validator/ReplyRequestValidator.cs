@@ -7,7 +7,7 @@ namespace Forum.Api.Validator
     {
         public ReplyRequestValidator()
         {
-            RuleFor(r => r.Id).GreaterThanOrEqualTo(1);
+            RuleFor(r => r.Id).GreaterThanOrEqualTo(0);
 
             RuleFor(r => r.Text).MinimumLength(10).WithMessage("Reply is too short");
             RuleFor(r => r.Text).MaximumLength(1000).WithMessage("Reply is too long");

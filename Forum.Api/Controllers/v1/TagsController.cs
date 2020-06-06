@@ -18,7 +18,7 @@ namespace Forum.Api.Controllers.v1
     {
         private readonly ITagManager _tagManager;
         private readonly IMapper _mapper;
-
+        
         public TagsController(ITagManager tagManager, IMapper mapper)
         {
             _tagManager = tagManager;
