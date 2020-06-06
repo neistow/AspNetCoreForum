@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Abstract.Repositories;
+using Forum.Core.Concrete.Constants;
 using Forum.Core.Concrete.Managers;
 using Forum.Core.Concrete.Models;
 using Forum.Core.Concrete.Repositories;
@@ -56,7 +57,7 @@ namespace Forum.Api
 
             // Swagger
             services.AddSwaggerGen(o =>
-                o.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}));
+                o.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" }));
 
             services.AddControllers(options => options.OutputFormatters.Clear())
                 .AddNewtonsoftJson(o => { o.UseCamelCasing(processDictionaryKeys: true); })

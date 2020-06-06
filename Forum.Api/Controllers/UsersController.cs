@@ -30,7 +30,7 @@ namespace Forum.Api.Controllers
         {
             var users = await _userManager.Users.ToListAsync();
             var response = _mapper.Map<IEnumerable<UserListResponse>>(users);
-            
+
             return Ok(response);
         }
 

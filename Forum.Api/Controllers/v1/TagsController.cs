@@ -18,7 +18,7 @@ namespace Forum.Api.Controllers.v1
     {
         private readonly ITagManager _tagManager;
         private readonly IMapper _mapper;
-        
+
         public TagsController(ITagManager tagManager, IMapper mapper)
         {
             _tagManager = tagManager;
@@ -75,7 +75,7 @@ namespace Forum.Api.Controllers.v1
             {
                 return BadRequest("Tag id in route doesn't match tag id in request");
             }
-            
+
             var tagInDb = await _tagManager.GetTag(id);
             if (tagInDb == null)
             {
