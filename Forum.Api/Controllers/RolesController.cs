@@ -35,7 +35,7 @@ namespace Forum.Api.Controllers
         {
             var roles = await _roleManager.Roles.ToListAsync();
             var response = _mapper.Map<IEnumerable<RoleResponse>>(roles);
-            
+
             return Ok(response);
         }
 
@@ -73,7 +73,7 @@ namespace Forum.Api.Controllers
 
             await _userManager.AddToRoleAsync(user, request.RoleName);
 
-            return Ok();
+            return Ok($"{user.UserName} is now {request.RoleName}.");
         }
 
         [HttpPost("remove")]
@@ -91,10 +91,10 @@ namespace Forum.Api.Controllers
             {
                 return BadRequest("Role does not exist.");
             }
-            
+
             await _userManager.RemoveFromRoleAsync(user, request.RoleName);
 
-            return Ok();
+            return Ok($"{user.UserName} is not {request.RoleName} anymore");
         }
 
         [HttpDelete]

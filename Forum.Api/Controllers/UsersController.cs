@@ -29,8 +29,8 @@ namespace Forum.Api.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userManager.Users.ToListAsync();
-            var response = _mapper.Map<IEnumerable<UserResponse>>(users);
-
+            var response = _mapper.Map<IEnumerable<UserListResponse>>(users);
+            
             return Ok(response);
         }
 
@@ -40,12 +40,15 @@ namespace Forum.Api.Controllers
         public async Task<IActionResult> GetUser(string username)
         {
             var user = await _userManager.Users.SingleOrDefaultAsync(u => u.NormalizedUserName == username.Normalize());
+
             if (user == null)
             {
                 return NotFound("User does not exist");
             }
 
             var response = _mapper.Map<UserResponse>(user);
+            response.Roles = await _userManager.GetRolesAsync(user);
+
             return Ok(response);
         }
     }

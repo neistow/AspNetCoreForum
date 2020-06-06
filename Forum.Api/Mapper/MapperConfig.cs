@@ -39,6 +39,7 @@ namespace Forum.Api.Mapper
             // User
             CreateMap<RegisterRequest, User>();
             CreateMap<User, UserResponse>();
+            CreateMap<User, UserListResponse>();
 
             // Role
             CreateMap<RoleRequest, IdentityRole>();
