@@ -120,7 +120,10 @@ namespace Forum.Api
             app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseCors(o => o.AllowAnyOrigin());
+            app.UseCors(o =>
+            {
+                o.AllowAnyOrigin();
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

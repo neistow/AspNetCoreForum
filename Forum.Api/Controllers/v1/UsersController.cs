@@ -1,18 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Concrete.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Api.Controllers
+namespace Forum.Api.Controllers.v1
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/v1/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<User> _userManager;

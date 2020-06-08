@@ -9,16 +9,15 @@ using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Concrete.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Forum.Api.Controllers
+namespace Forum.Api.Controllers.v1
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/v1/[controller]")]
     public class AccountsController : ControllerBase
     {
         private readonly SignInManager<User> _signInManager;
@@ -35,7 +34,7 @@ namespace Forum.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("token")]
+        [HttpPost("signin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Token([FromBody] LoginRequest request)
@@ -53,7 +52,7 @@ namespace Forum.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPost("register")]
+        [HttpPost("signup")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)

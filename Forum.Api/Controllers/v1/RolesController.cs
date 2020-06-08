@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Forum.Api.Controllers
+namespace Forum.Api.Controllers.v1
 {
     [Authorize(Roles = Roles.Admin)]
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api/v1/[controller]")]
     public class RolesController : ControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;
