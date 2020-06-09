@@ -20,6 +20,7 @@ using Forum.Core.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 
@@ -57,7 +58,8 @@ namespace Forum.Api
 
             // Swagger
             services.AddSwaggerGen(o =>
-                o.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" }));
+                o.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}));
+
 
             services.AddControllers(options => options.OutputFormatters.Clear())
                 .AddNewtonsoftJson(o => { o.UseCamelCasing(processDictionaryKeys: true); })
@@ -123,6 +125,7 @@ namespace Forum.Api
             app.UseCors(o =>
             {
                 o.AllowAnyOrigin();
+                o.WithHeaders(HeaderNames.ContentType);
             });
 
             app.UseAuthentication();
