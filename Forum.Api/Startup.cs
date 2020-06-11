@@ -125,7 +125,7 @@ namespace Forum.Api
             app.UseCors(o =>
             {
                 o.AllowAnyOrigin();
-                o.WithHeaders(HeaderNames.ContentType);
+                o.WithHeaders(HeaderNames.ContentType, HeaderNames.Authorization);
             });
 
             app.UseAuthentication();

@@ -42,9 +42,9 @@ namespace Forum.Api.Controllers.v1
             var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, false, false);
             if (!result.Succeeded)
             {
-                return BadRequest("Login Failed.");
+                return BadRequest("Incorrect username or password.");
             }
-
+            
             var user = _userManager.Users.SingleOrDefault(r => r.UserName == request.UserName);
             var token = await GenerateJwtToken(user);
 

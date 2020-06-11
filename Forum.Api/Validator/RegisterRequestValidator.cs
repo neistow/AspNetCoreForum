@@ -14,7 +14,7 @@ namespace Forum.Api.Validator
             RuleFor(r => r.UserName)
                 .MinimumLength(3)
                 .WithMessage("UserName is too short");
-            
+
             RuleFor(r => r.UserName)
                 .MaximumLength(55)
                 .WithMessage("UserName is too long");
