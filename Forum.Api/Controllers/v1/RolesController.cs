@@ -13,9 +13,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Forum.Api.Controllers.v1
 {
     [Authorize(Roles = Roles.Admin)]
-    [ApiController]
-    [Route("/api/v1/[controller]")]
-    public class RolesController : ControllerBase
+    public class RolesController : ApiControllerBase
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<User> _userManager;

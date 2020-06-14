@@ -12,9 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Forum.Api.Controllers.v1
 {
     [Authorize(Roles = Roles.Admin)]
-    [ApiController]
-    [Route("/api/v1/[controller]")]
-    public class TagsController : ControllerBase
+
+    public class TagsController : ApiControllerBase
     {
         private readonly ITagManager _tagManager;
         private readonly IMapper _mapper;

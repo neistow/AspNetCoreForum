@@ -15,9 +15,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Forum.Api.Controllers.v1
 {
     [Authorize]
-    [ApiController]
-    [Route("/api/v1/[controller]")]
-    public class PostsController : ControllerBase
+    public class PostsController : ApiControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly IPostManager _postManager;

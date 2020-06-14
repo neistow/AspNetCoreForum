@@ -16,9 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Forum.Api.Controllers.v1
 {
-    [ApiController]
-    [Route("/api/v1/[controller]")]
-    public class AccountsController : ControllerBase
+    public class AccountsController : ApiControllerBase
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
@@ -44,7 +42,7 @@ namespace Forum.Api.Controllers.v1
             {
                 return BadRequest("Incorrect username or password.");
             }
-            
+
             var user = _userManager.Users.SingleOrDefault(r => r.UserName == request.UserName);
             var token = await GenerateJwtToken(user);
 
@@ -63,7 +61,7 @@ namespace Forum.Api.Controllers.v1
 
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                return BadRequest(result.Errors.Select(e => e.Description));
             }
 
             return Ok("Successfully registered.");

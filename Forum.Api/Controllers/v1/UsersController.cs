@@ -9,9 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Api.Controllers.v1
 {
-    [ApiController]
-    [Route("/api/v1/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : ApiControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
