@@ -7,7 +7,7 @@ namespace Forum.Api.Validator
     {
         public PostRequestValidator()
         {
-            RuleFor(post => post.Id).GreaterThanOrEqualTo(0);
+            RuleFor(post => post.Id).GreaterThanOrEqualTo(0).WithMessage("Invalid Post Id");
 
             RuleFor(post => post.Title).MaximumLength(55).WithMessage("Post Title Is Too Long.");
             RuleFor(post => post.Title).MinimumLength(10).WithMessage("Post Title Is Too Short.");

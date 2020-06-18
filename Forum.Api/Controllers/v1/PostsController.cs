@@ -90,7 +90,7 @@ namespace Forum.Api.Controllers.v1
             {
                 return NotFound("Post does not exist.");
             }
-
+            
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (postInDb.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
             {

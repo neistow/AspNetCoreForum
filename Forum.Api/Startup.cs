@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Abstract.Repositories;
-using Forum.Core.Concrete.Constants;
 using Forum.Core.Concrete.Managers;
 using Forum.Core.Concrete.Models;
 using Forum.Core.Concrete.Repositories;
@@ -22,7 +21,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 
 namespace Forum.Api
 {
