@@ -9,6 +9,7 @@ using AutoMapper;
 using Forum.Api.Requests;
 using Forum.Api.Responses;
 using Forum.Core.Concrete.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,7 @@ namespace Forum.Api.Controllers.v1
         [HttpPost("signin")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Token([FromBody] LoginRequest request)
+        public async Task<IActionResult> SignIn([FromBody] LoginRequest request)
         {
             var result = await _signInManager.PasswordSignInAsync(request.UserName, request.Password, false, false);
             if (!result.Succeeded)
@@ -53,7 +54,7 @@ namespace Forum.Api.Controllers.v1
         [HttpPost("signup")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> SignUp([FromBody] RegisterRequest request)
         {
             var user = _mapper.Map<User>(request);
 
@@ -65,6 +66,27 @@ namespace Forum.Api.Controllers.v1
             }
 
             return Ok("Successfully registered.");
+        }
+
+        [Authorize]
+        [HttpPost("change_password")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+            {
+                return BadRequest("User does not exist.");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors.Select(e => e.Description));
+            }
+
+            return Ok("Password was successfully changed.");
         }
 
         private async Task<string> GenerateJwtToken(User user)
