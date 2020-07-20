@@ -4,12 +4,13 @@ using Forum.Core.Concrete.Models;
 
 namespace Forum.Core.Abstract.Managers
 {
-    public interface ITagManager : IManager
+    public interface ITagManager
     {
         Task<List<Tag>> GetAllTags();
         ValueTask<Tag> GetTag(int id);
         void AddTag(Tag tag);
         void DeleteTag(Tag tag);
         bool TagExists(int tagId);
+        void UpdateTag(Tag tag);
     }
 }

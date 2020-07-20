@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Forum.Core.Abstract;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Abstract.Repositories;
 using Forum.Core.Concrete.Models;
@@ -9,11 +10,14 @@ namespace Forum.Core.Concrete.Managers
 {
     public class TagManager : ITagManager
     {
+        private readonly IUnitOfWork _unitOfWork;
+        
         private readonly ITagRepository _tagRepository;
 
-        public TagManager(ITagRepository tagRepository)
+        public TagManager(IUnitOfWork unitOfWork)
         {
-            _tagRepository = tagRepository;
+            _unitOfWork = unitOfWork;
+            _tagRepository = _unitOfWork.TagRepository;
         }
 
         public Task<List<Tag>> GetAllTags()
@@ -29,11 +33,13 @@ namespace Forum.Core.Concrete.Managers
         public void AddTag(Tag tag)
         {
             _tagRepository.Add(tag);
+            _unitOfWork.Complete();
         }
 
         public void DeleteTag(Tag tag)
         {
             _tagRepository.Remove(tag);
+            _unitOfWork.Complete();
         }
 
         public bool TagExists(int tagId)
@@ -41,14 +47,10 @@ namespace Forum.Core.Concrete.Managers
             return _tagRepository.Get(tagId) != null;
         }
 
-        public int SaveChanges()
+        public void UpdateTag(Tag tag)
         {
-            return _tagRepository.SaveChanges();
-        }
-
-        public Task<int> SaveChangesAsync()
-        {
-            return _tagRepository.SaveChangesAsync();
+            _tagRepository.Update(tag);
+            _unitOfWork.Complete();
         }
     }
 }

@@ -63,6 +63,12 @@ namespace Forum.Core.Abstract.Repositories
             Context.Set<TEntity>().AddRange(entities);
         }
 
+        public void Update(TEntity entityToUpdate)
+        {
+            Context.Set<TEntity>().Attach(entityToUpdate);
+            Context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
         public void Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);

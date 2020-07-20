@@ -53,12 +53,11 @@ namespace Forum.Api.Controllers.v1
 
         [HttpPost]
         [ProducesResponseType(201)]
-        public async Task<IActionResult> AddTag([FromBody] TagRequest tagRequest)
+        public IActionResult AddTag([FromBody] TagRequest tagRequest)
         {
             var tag = _mapper.Map<Tag>(tagRequest);
 
             _tagManager.AddTag(tag);
-            await _tagManager.SaveChangesAsync();
 
             var response = _mapper.Map<TagResponse>(tag);
             return CreatedAtAction(nameof(GetTag), new {id = tag.Id}, response);
@@ -82,7 +81,7 @@ namespace Forum.Api.Controllers.v1
             }
 
             _mapper.Map(tagRequest, tagInDb);
-            await _tagManager.SaveChangesAsync();
+            _tagManager.UpdateTag(tagInDb);
 
             var response = _mapper.Map<TagResponse>(tagInDb);
 
@@ -101,7 +100,6 @@ namespace Forum.Api.Controllers.v1
             }
 
             _tagManager.DeleteTag(tag);
-            await _tagManager.SaveChangesAsync();
 
             return Ok();
         }

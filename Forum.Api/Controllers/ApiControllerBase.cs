@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Forum.Api.Controllers.v1
+namespace Forum.Api.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]

@@ -95,7 +95,6 @@ namespace Forum.Api.Controllers.v1
             reply.AuthorId = authorId;
 
             _replyManager.AddReply(reply);
-            await _replyManager.SaveChangesAsync();
 
             var response = _mapper.Map<ReplyResponse>(reply);
 
@@ -119,23 +118,22 @@ namespace Forum.Api.Controllers.v1
                 return NotFound("Post does not exist.");
             }
 
-            var reply = await _replyManager.GetReply(id);
-            if (reply == null)
+            var replyInDb = await _replyManager.GetReply(id);
+            if (replyInDb == null)
             {
                 return NotFound("Reply does not exist.");
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (reply.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
+            if (replyInDb.AuthorId != user.Id && !await _userManager.IsInRoleAsync(user, Roles.Admin))
             {
                 return BadRequest("You are not author of reply.");
             }
 
-            _mapper.Map(request, reply);
-            reply.DateEdited = DateTime.Now;
-            await _replyManager.SaveChangesAsync();
+            _mapper.Map(request, replyInDb);
+            _replyManager.UpdateReply(replyInDb);
 
-            var response = _mapper.Map<ReplyResponse>(reply);
+            var response = _mapper.Map<ReplyResponse>(replyInDb);
             return Ok(response);
         }
 
@@ -163,7 +161,6 @@ namespace Forum.Api.Controllers.v1
             }
 
             _replyManager.RemoveReply(reply);
-            await _replyManager.SaveChangesAsync();
 
             return Ok();
         }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -62,7 +61,7 @@ namespace Forum.Api.Controllers.v1
         [HttpPost]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> AddPost([FromBody] PostRequest postRequest)
+        public IActionResult AddPost([FromBody] PostRequest postRequest)
         {
             if (!postRequest.PostTags.All(t => _tagManager.TagExists(t)))
             {
@@ -73,7 +72,6 @@ namespace Forum.Api.Controllers.v1
             post.AuthorId = _userManager.GetUserId(HttpContext.User);
 
             _postManager.AddPost(post);
-            await _postManager.SaveChangesAsync();
 
             var response = _mapper.Map<PostResponse>(post);
             return CreatedAtAction(nameof(GetPost), new {id = post.Id}, response);
@@ -103,8 +101,7 @@ namespace Forum.Api.Controllers.v1
             }
 
             _mapper.Map(postRequest, postInDb);
-            postInDb.DateEdited = DateTime.Now;
-            await _postManager.SaveChangesAsync();
+            _postManager.UpdatePost(postInDb);
 
             var response = _mapper.Map<PostResponse>(postInDb);
 
@@ -130,7 +127,6 @@ namespace Forum.Api.Controllers.v1
             }
 
             _postManager.RemovePost(postInDb);
-            await _postManager.SaveChangesAsync();
 
             return Ok();
         }

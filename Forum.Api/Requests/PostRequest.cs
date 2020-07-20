@@ -8,11 +8,6 @@ namespace Forum.Api.Requests
         public int Id { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
-        public ICollection<int> PostTags { get; set; }
-
-        public PostRequest()
-        {
-            PostTags = new Collection<int>();
-        }
+        public ICollection<int> PostTags { get; set; } = new Collection<int>();
     }
 }

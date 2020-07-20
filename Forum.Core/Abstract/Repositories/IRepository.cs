@@ -20,7 +20,9 @@ namespace Forum.Core.Abstract.Repositories
 
         void Add(TEntity entity);
         void AddRange(IEnumerable<TEntity> entities);
-
+        
+        void Update(TEntity entityToUpdate);
+        
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
 

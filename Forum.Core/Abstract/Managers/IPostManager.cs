@@ -4,7 +4,7 @@ using Forum.Core.Concrete.Models;
 
 namespace Forum.Core.Abstract.Managers
 {
-    public interface IPostManager : IManager
+    public interface IPostManager
     {
         Task<List<Post>> GetAllPosts();
         Task<Post> GetPost(int id);
@@ -12,5 +12,6 @@ namespace Forum.Core.Abstract.Managers
         Task<bool> PostExists(int id);
         void AddPost(Post post);
         void RemovePost(Post post);
+        void UpdatePost(Post post);
     }
 }

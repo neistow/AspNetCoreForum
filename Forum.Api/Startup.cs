@@ -4,6 +4,7 @@ using System.Text;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using Forum.Api.Validator;
+using Forum.Core.Abstract;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Abstract.Repositories;
+using Forum.Core.Concrete;
 using Forum.Core.Concrete.Managers;
 using Forum.Core.Concrete.Models;
 using Forum.Core.Concrete.Repositories;
@@ -49,6 +51,7 @@ namespace Forum.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Database
             services.AddDbContext<ApplicationDbContext>(o =>
                 o.UseMySql(Configuration["Data:ConnectionString"],
                     mySqlOptions =>
@@ -58,7 +61,7 @@ namespace Forum.Api
             services.AddSwaggerGen(o =>
                 o.SwaggerDoc("v1", new OpenApiInfo {Title = "My API", Version = "v1"}));
 
-
+            // Controllers
             services.AddControllers(options => options.OutputFormatters.Clear())
                 .AddNewtonsoftJson(o => { o.UseCamelCasing(processDictionaryKeys: true); })
                 .AddFluentValidation(fv =>
@@ -98,12 +101,17 @@ namespace Forum.Api
                     };
                 });
 
-            // Bind Repositories and Managers Here...
+            // Repositories and Managers
             services.AddScoped<DbContext, ApplicationDbContext>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IPostManager, PostManager>();
+
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ITagManager, TagManager>();
+
             services.AddScoped<IReplyRepository, ReplyRepository>();
             services.AddScoped<IReplyManager, ReplyManager>();
         }

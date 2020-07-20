@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Forum.Core.Abstract;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Abstract.Repositories;
 using Forum.Core.Concrete.Models;
@@ -7,11 +9,14 @@ namespace Forum.Core.Concrete.Managers
 {
     public class ReplyManager : IReplyManager
     {
+        private readonly IUnitOfWork _unitOfWork;
+        
         private readonly IReplyRepository _replyRepository;
-
-        public ReplyManager(IReplyRepository replyRepository)
+        
+        public ReplyManager(IUnitOfWork unitOfWork)
         {
-            _replyRepository = replyRepository;
+            _unitOfWork = unitOfWork;
+            _replyRepository = _unitOfWork.ReplyRepository;
         }
 
         public ValueTask<Reply> GetReply(int id)
@@ -27,21 +32,21 @@ namespace Forum.Core.Concrete.Managers
         public void AddReply(Reply reply)
         {
             _replyRepository.Add(reply);
+            _unitOfWork.Complete();
         }
 
         public void RemoveReply(Reply reply)
         {
             _replyRepository.Remove(reply);
+            _unitOfWork.Complete();
         }
 
-        public int SaveChanges()
+        public void UpdateReply(Reply reply)
         {
-            return _replyRepository.SaveChanges();
-        }
-
-        public Task<int> SaveChangesAsync()
-        {
-            return _replyRepository.SaveChangesAsync();
+            reply.DateEdited = DateTime.Now;
+            
+            _replyRepository.Update(reply);
+            _unitOfWork.Complete();
         }
     }
 }

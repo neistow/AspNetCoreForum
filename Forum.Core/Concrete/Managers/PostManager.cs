@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Forum.Core.Abstract;
 using Forum.Core.Abstract.Managers;
 using Forum.Core.Abstract.Repositories;
 using Forum.Core.Concrete.Models;
@@ -8,11 +10,14 @@ namespace Forum.Core.Concrete.Managers
 {
     public class PostManager : IPostManager
     {
+        private readonly IUnitOfWork _unitOfWork;
+        
         private readonly IPostRepository _postRepository;
 
-        public PostManager(IPostRepository postRepository)
+        public PostManager(IUnitOfWork unitOfWork)
         {
-            _postRepository = postRepository;
+            _unitOfWork = unitOfWork;
+            _postRepository = _unitOfWork.PostRepository;
         }
 
         public Task<List<Post>> GetAllPosts()
@@ -38,21 +43,21 @@ namespace Forum.Core.Concrete.Managers
         public void AddPost(Post post)
         {
             _postRepository.Add(post);
+            _unitOfWork.Complete();
         }
 
         public void RemovePost(Post post)
         {
             _postRepository.Remove(post);
+            _unitOfWork.Complete();
         }
 
-        public int SaveChanges()
+        public void UpdatePost(Post post)
         {
-            return _postRepository.SaveChanges();
-        }
-
-        public Task<int> SaveChangesAsync()
-        {
-            return _postRepository.SaveChangesAsync();
+            post.DateEdited = DateTime.Now;
+            
+            _postRepository.Update(post);
+            _unitOfWork.Complete();
         }
     }
 }
